@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin, Subject, Subscription, EMPTY } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
@@ -31,24 +31,36 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   constructor(
     private weatherService: WeatherService,
     private favoritesService: FavoritesService,
-    private zone: NgZone
+    private zone: NgZone,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.favSubscription = this.favoritesService.getFavorites().pipe(
       switchMap((favs: string[]) => {
-        this.zone.run(() => this.favorites = favs);
+        this.zone.run(() => {
+          this.favorites = favs;
+          this.cdr.detectChanges();
+        });
+
         if (favs.length === 0) {
-          this.zone.run(() => this.favoriteWeatherData = []);
+          this.zone.run(() => {
+            this.favoriteWeatherData = [];
+            this.cdr.detectChanges();
+          });
           return EMPTY;
         }
+
         const requests = favs.map(city => this.weatherService.getWeather(city).pipe(
           catchError(() => EMPTY)
         ));
         return forkJoin(requests);
       })
     ).subscribe((data: WeatherData[]) => {
-      this.zone.run(() => this.favoriteWeatherData = data);
+      this.zone.run(() => {
+        this.favoriteWeatherData = data;
+        this.cdr.detectChanges();
+      });
     });
 
     this.searchSubscription = this.searchSubject.pipe(
@@ -56,6 +68,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         this.zone.run(() => {
           this.loading = true;
           this.error = null;
+          this.cdr.detectChanges();
         });
       }),
       switchMap(query => {
@@ -76,6 +89,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
               this.loading = false;
               this.weatherData = undefined;
               this.forecastData = undefined;
+              this.cdr.detectChanges();
             });
             return EMPTY;
           })
@@ -86,6 +100,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         this.weatherData = result.weather;
         this.forecastData = result.forecast;
         this.loading = false;
+        this.cdr.detectChanges();
       });
     });
 
@@ -104,7 +119,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
           });
         },
         () => {
-          console.log('User denied geolocation or error occurred.');
+          this.zone.run(() => this.cdr.detectChanges());
         }
       );
     }
@@ -112,6 +127,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
+    this.favSubscription?.unsubscribe();
   }
 
   handleCitySearch(city: string): void {
