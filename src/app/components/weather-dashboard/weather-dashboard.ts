@@ -96,6 +96,11 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     this.searchSubject.next(city);
   }
 
+  removeFavorite(city: string, event: Event): void {
+    event.stopPropagation();
+    this.favoritesService.removeFavorite(city);
+  }
+
   getWeatherClass(): string {
     if (!this.weatherData) return 'default-bg';
     const main = this.weatherData.weather[0].main.toLowerCase();
