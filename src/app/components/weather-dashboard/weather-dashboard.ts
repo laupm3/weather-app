@@ -7,12 +7,13 @@ import { FavoritesService } from '../../services/favorites.service';
 import { SearchBar } from '../search-bar/search-bar';
 import { WeatherCard } from '../weather-card/weather-card';
 import { Forecast } from '../forecast/forecast';
+import { HourlyChart } from '../hourly-chart/hourly-chart';
 import { WeatherData, ForecastData } from '../../models/weather.model';
 
 @Component({
   selector: 'app-weather-dashboard',
   standalone: true,
-  imports: [CommonModule, SearchBar, WeatherCard, Forecast],
+  imports: [CommonModule, SearchBar, WeatherCard, Forecast, HourlyChart],
   templateUrl: './weather-dashboard.html',
   styleUrl: './weather-dashboard.css',
 })

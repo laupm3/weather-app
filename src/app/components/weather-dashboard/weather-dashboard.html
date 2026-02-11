@@ -49,6 +49,7 @@
 
             <div *ngIf="!loading && weatherData" class="weather-display">
                 <app-weather-card [weatherData]="weatherData"></app-weather-card>
+                <app-hourly-chart *ngIf="forecastData" [forecastData]="forecastData"></app-hourly-chart>
                 <app-forecast *ngIf="forecastData" [forecastData]="forecastData"></app-forecast>
             </div>
 
