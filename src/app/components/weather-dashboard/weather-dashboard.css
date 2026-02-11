@@ -93,33 +93,35 @@
 
 .fav-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
+    margin-top: 2rem;
 }
 
 .fav-tile {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1.5rem;
-    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 1.5rem;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    min-height: 160px;
+    justify-content: space-between;
+    min-height: 180px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .fav-tile:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-10px);
     border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .tile-header {
@@ -129,22 +131,23 @@
 }
 
 .tile-city {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: white;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
+    letter-spacing: -0.02em;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 80%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .tile-remove {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     border: none;
-    color: var(--text-muted);
-    width: 24px;
-    height: 24px;
+    color: white;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -152,47 +155,52 @@
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    line-height: 1;
+    opacity: 0.6;
+}
+
+.fav-tile:hover .tile-remove {
+    opacity: 1;
 }
 
 .tile-remove:hover {
     background: #ff4d4d;
-    color: white;
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(90deg);
 }
 
 .tile-body {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: auto;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .tile-icon {
     width: 50px;
     height: 50px;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+    margin-left: -10px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .tile-temp-group {
     display: flex;
-    flex-direction: column;
+    align-items: baseline;
+    gap: 0.5rem;
 }
 
 .tile-temp {
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1;
+    font-size: 2.25rem;
+    font-weight: 900;
     color: white;
+    line-height: 1;
 }
 
 .tile-desc {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: capitalize;
-    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
+
 
 
 

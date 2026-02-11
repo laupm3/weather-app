@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin, Subject, Subscription, EMPTY } from 'rxjs';
-import { switchMap, catchError, tap } from 'rxjs/operators';
+import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
 import { WeatherService } from '../../services/weather.service';
 import { FavoritesService } from '../../services/favorites.service';
 import { SearchBar } from '../search-bar/search-bar';
@@ -30,32 +30,33 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
   constructor(
     private weatherService: WeatherService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private zone: NgZone
   ) { }
 
   ngOnInit(): void {
-    // Escuchamos cambios en favoritos y cargamos sus datos climáticos
     this.favSubscription = this.favoritesService.getFavorites().pipe(
       switchMap((favs: string[]) => {
-        this.favorites = favs;
+        this.zone.run(() => this.favorites = favs);
         if (favs.length === 0) {
-          this.favoriteWeatherData = [];
+          this.zone.run(() => this.favoriteWeatherData = []);
           return EMPTY;
         }
-        // Cargamos el clima de todas las ciudades favoritas en paralelo
         const requests = favs.map(city => this.weatherService.getWeather(city).pipe(
-          catchError(() => EMPTY) // Si falla una, seguimos con las demás
+          catchError(() => EMPTY)
         ));
         return forkJoin(requests);
       })
     ).subscribe((data: WeatherData[]) => {
-      this.favoriteWeatherData = data;
+      this.zone.run(() => this.favoriteWeatherData = data);
     });
 
     this.searchSubscription = this.searchSubject.pipe(
       tap(() => {
-        this.loading = true;
-        this.error = null;
+        this.zone.run(() => {
+          this.loading = true;
+          this.error = null;
+        });
       }),
       switchMap(query => {
         const request = typeof query === 'string'
@@ -70,18 +71,22 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
         return request.pipe(
           catchError(err => {
-            this.error = 'Weather data unavailable. Please try again.';
-            this.loading = false;
-            this.weatherData = undefined;
-            this.forecastData = undefined;
+            this.zone.run(() => {
+              this.error = 'Weather data unavailable. Please try again.';
+              this.loading = false;
+              this.weatherData = undefined;
+              this.forecastData = undefined;
+            });
             return EMPTY;
           })
         );
       })
     ).subscribe(result => {
-      this.weatherData = result.weather;
-      this.forecastData = result.forecast;
-      this.loading = false;
+      this.zone.run(() => {
+        this.weatherData = result.weather;
+        this.forecastData = result.forecast;
+        this.loading = false;
+      });
     });
 
     this.getUserLocation();
@@ -91,9 +96,11 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.searchSubject.next({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
+          this.zone.run(() => {
+            this.searchSubject.next({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude
+            });
           });
         },
         () => {
