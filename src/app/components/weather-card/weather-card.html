@@ -24,19 +24,35 @@
             </div>
         </div>
 
-        <div class="weather-details">
-            <div class="detail-item">
-                <span class="label">Feels like</span>
-                <span class="value">{{ weatherData.main.feels_like | number: '1.0-1' }}°{{ units === 'metric' ? 'C' :
-                    'F' }}</span>
+        <div class="details-grid">
+            <div class="detail-card glass">
+                <div class="detail-icon">💧</div>
+                <div class="detail-info">
+                    <span class="detail-label">{{ langService.get('HUMIDITY') }}</span>
+                    <span class="detail-value">{{ weatherData.main.humidity }}%</span>
+                </div>
             </div>
-            <div class="detail-item">
-                <span class="label">Humidity</span>
-                <span class="value">{{ weatherData.main.humidity }}%</span>
+            <div class="detail-card glass">
+                <div class="detail-icon">💨</div>
+                <div class="detail-info">
+                    <span class="detail-label">{{ langService.get('WIND_SPEED') }}</span>
+                    <span class="detail-value">{{ weatherData.wind.speed }} {{ units === 'metric' ? 'm/s' : 'mph'
+                        }}</span>
+                </div>
             </div>
-            <div class="detail-item">
-                <span class="label">Wind</span>
-                <span class="value">{{ weatherData.wind.speed }} m/s</span>
+            <div class="detail-card glass">
+                <div class="detail-icon">🌡️</div>
+                <div class="detail-info">
+                    <span class="detail-label">{{ langService.get('FEELS_LIKE') }}</span>
+                    <span class="detail-value">{{ weatherData.main.feels_like | number: '1.0-1' }}°</span>
+                </div>
+            </div>
+            <div class="detail-card glass">
+                <div class="detail-icon">👁️</div>
+                <div class="detail-info">
+                    <span class="detail-label">{{ langService.get('VISIBILITY') }}</span>
+                    <span class="detail-value">{{ weatherData.visibility / 1000 }} km</span>
+                </div>
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ import { forkJoin, Subject, Subscription, EMPTY } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
 import { WeatherService } from '../../services/weather.service';
 import { FavoritesService } from '../../services/favorites.service';
+import { LanguageService } from '../../services/language.service';
 import { SearchBar } from '../search-bar/search-bar';
 import { WeatherCard } from '../weather-card/weather-card';
 import { Forecast } from '../forecast/forecast';
@@ -34,6 +35,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   constructor(
     private weatherService: WeatherService,
     private favoritesService: FavoritesService,
+    public langService: LanguageService,
     private zone: NgZone,
     private cdr: ChangeDetectorRef
   ) {
@@ -94,7 +96,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         return request.pipe(
           catchError(err => {
             this.zone.run(() => {
-              this.error = 'Weather data unavailable. Please try again.';
+              this.error = this.langService.get('ERROR_MSG');
               this.loading = false;
               this.weatherData = undefined;
               this.forecastData = undefined;

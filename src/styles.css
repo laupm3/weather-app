@@ -1,18 +1,41 @@
 :root {
     --primary-font: 'Outfit', sans-serif;
-    --bg-clear: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-    --bg-cloudy: linear-gradient(135deg, #475569 0%, #1e293b 100%);
-    --bg-rainy: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-    --bg-snowy: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+    --bg-clear: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+    --bg-cloudy: linear-gradient(135deg, #334155 0%, #0f172a 100%);
+    --bg-rainy: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    --bg-snowy: linear-gradient(135deg, #475569 0%, #1e293b 100%);
     --bg-thunder: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
     --bg-default: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
 
     --glass-bg: rgba(255, 255, 255, 0.08);
     --glass-border: rgba(255, 255, 255, 0.12);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 
     --text-white: #ffffff;
     --text-muted: rgba(255, 255, 255, 0.7);
+}
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--glass-noise);
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
 }
 
 * {

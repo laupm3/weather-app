@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { WeatherData, ForecastData } from '../models/weather.model';
+import { WeatherData, ForecastData, CitySuggestion } from '../models/weather.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,8 +9,15 @@ import { WeatherData, ForecastData } from '../models/weather.model';
 export class WeatherService {
   private apiKey = '185669c3cc254ee20ab41aff03c1f043'; // User will need to replace this
   private apiUrl = 'https://api.openweathermap.org/data/2.5';
+  private geoUrl = 'https://api.openweathermap.org/geo/1.0';
 
   constructor(private http: HttpClient) { }
+
+  searchCities(query: string): Observable<CitySuggestion[]> {
+    return this.http.get<CitySuggestion[]>(
+      `${this.geoUrl}/direct?q=${query}&limit=5&appid=${this.apiKey}`
+    );
+  }
 
   getWeather(city: string, units: string = 'metric'): Observable<WeatherData> {
     return this.http.get<WeatherData>(

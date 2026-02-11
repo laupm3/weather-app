@@ -1,12 +1,21 @@
 <div class="search-container">
-  <input
-    type="text"
-    [(ngModel)]="city"
-    (keyup.enter)="onSearch()"
-    placeholder="Enter city name..."
-    class="search-input"
-  />
+  <div class="input-wrapper">
+    <input type="text" [(ngModel)]="city" (input)="onInput($event)" (keydown)="handleKeydown($event)"
+      (keyup.enter)="onSearch()" (blur)="onBlur()" (focus)="showSuggestions = suggestions.length > 0"
+      [placeholder]="langService.get('SEARCH_PLACEHOLDER')" class="search-input" autocomplete="off" />
+
+    <div *ngIf="showSuggestions" class="suggestions-list">
+      <div *ngFor="let suggestion of suggestions; let i = index" class="suggestion-item"
+        [class.selected]="i === selectedIndex" (mousedown)="selectSuggestion(suggestion)">
+        <span class="city-name">{{ suggestion.name }}</span>
+        <span class="region-info">
+          {{ suggestion.state ? suggestion.state + ', ' : '' }}{{ suggestion.country }}
+        </span>
+      </div>
+    </div>
+  </div>
+
   <button (click)="onSearch()" class="search-button">
-    Search
+    {{ langService.get('SEARCH_BUTTON') }}
   </button>
 </div>

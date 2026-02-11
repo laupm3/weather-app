@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ForecastData } from '../../models/weather.model';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-forecast',
@@ -13,6 +14,9 @@ export class Forecast implements OnChanges {
   @Input() forecastData?: ForecastData;
   @Input() units: string = 'metric';
   dailyForecasts: any[] = [];
+
+  constructor(public langService: LanguageService) { }
+
 
   ngOnChanges(): void {
     if (this.forecastData) {

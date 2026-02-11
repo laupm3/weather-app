@@ -1,4 +1,11 @@
 <div class="dashboard-container" [ngClass]="getWeatherClass()">
+    <!-- Atmospheric Layer -->
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
     <div class="inner-content">
         <header class="dashboard-header">
             <div class="header-main">
@@ -10,6 +17,13 @@
                         <div class="toggle-thumb" [class.imperial]="units === 'imperial'"></div>
                     </div>
                     <span [class.active]="units === 'imperial'">°F</span>
+                </div>
+
+                <div class="lang-switcher"
+                    (click)="langService.setLanguage(langService.getCurrentLang() === 'en' ? 'es' : 'en')">
+                    <span [class.active]="langService.getCurrentLang() === 'en'">EN</span>
+                    <span class="divider">|</span>
+                    <span [class.active]="langService.getCurrentLang() === 'es'">ES</span>
                 </div>
             </div>
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>
@@ -41,7 +55,7 @@
         <main class="dashboard-content">
             <div *ngIf="loading" class="loader-container">
                 <div class="loader"></div>
-                <p>Analyzing weather data...</p>
+                <p>{{ langService.get('ANALYZING_MSG') }}</p>
             </div>
 
             <div *ngIf="error" class="error-message">

@@ -1,5 +1,5 @@
 <div class="forecast-container">
-    <h3>5-Day Forecast</h3>
+    <h3>{{ langService.get('FORECAST_TITLE') }}</h3>
     <div class="forecast-grid">
         <div *ngFor="let day of dailyForecasts" class="forecast-item">
             <p class="day-name">{{ day.dt * 1000 | date: 'EEE' }}</p>

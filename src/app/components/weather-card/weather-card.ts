@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { WeatherData } from '../../models/weather.model';
 import { FavoritesService } from '../../services/favorites.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-weather-card',
@@ -16,7 +17,10 @@ export class WeatherCard {
   @Input() units: string = 'metric';
   @Output() favoriteToggled = new EventEmitter<void>();
 
-  constructor(private favoritesService: FavoritesService) { }
+  constructor(
+    private favoritesService: FavoritesService,
+    public langService: LanguageService
+  ) { }
 
   isFavorite(): boolean {
     return !!this.weatherData && this.favoritesService.isFavorite(this.weatherData.name);

@@ -15,6 +15,7 @@ export interface WeatherData {
     wind: {
         speed: number;
     };
+    visibility: number;
     name: string;
     dt: number;
 }
@@ -25,15 +26,22 @@ export interface ForecastData {
         main: {
             temp: number;
         };
-        weather: [
-            {
-                description: string;
-                icon: string;
-            }
-        ];
+        weather: Array<{
+            description: string;
+            icon: string;
+        }>;
         dt_txt: string;
     }>;
     city: {
         name: string;
     };
 }
+
+export interface CitySuggestion {
+    name: string;
+    lat: number;
+    lon: number;
+    country: string;
+    state?: string;
+}
+
