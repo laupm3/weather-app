@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { ForecastData } from '../../models/weather.model';
@@ -14,18 +14,29 @@ Chart.register(...registerables);
 })
 export class HourlyChart implements OnChanges, AfterViewInit {
     @Input() forecastData!: ForecastData;
+    @Input() units: string = 'metric';
     @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
     private chart: Chart | null = null;
 
+    constructor(private cdr: ChangeDetectorRef) { }
+
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['forecastData'] && this.chart) {
             this.updateChart();
+            this.cdr.detectChanges();
+        }
+        if (changes['units'] && this.chart) {
+            this.updateChart();
+            this.cdr.detectChanges();
         }
     }
 
     ngAfterViewInit(): void {
-        this.createChart();
+        // Pequeño delay para asegurar que el DOM y el contenedor tengan dimensiones
+        setTimeout(() => {
+            this.createChart();
+        }, 0);
     }
 
     private createChart(): void {
@@ -76,7 +87,10 @@ export class HourlyChart implements OnChanges, AfterViewInit {
                         cornerRadius: 10,
                         displayColors: false,
                         callbacks: {
-                            label: (context) => `${context.parsed.y.toFixed(1)}°`
+                            label: (context) => {
+                                const val = context.parsed.y;
+                                return val !== null ? `${val.toFixed(1)}°${this.units === 'metric' ? 'C' : 'F'}` : '';
+                            }
                         }
                     }
                 },
@@ -103,6 +117,15 @@ export class HourlyChart implements OnChanges, AfterViewInit {
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         });
         this.chart.data.datasets[0].data = next24h.map(item => item.main.temp);
+
+        // Actualizamos tooltip en caso de cambio de unidades
+        if (this.chart.options.plugins?.tooltip?.callbacks) {
+            this.chart.options.plugins.tooltip.callbacks.label = (context) => {
+                const val = context.parsed.y;
+                return val !== null ? `${val.toFixed(1)}°${this.units === 'metric' ? 'C' : 'F'}` : '';
+            };
+        }
+
         this.chart.update();
     }
 }

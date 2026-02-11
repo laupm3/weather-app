@@ -29,6 +29,7 @@
                                 [alt]="fav.weather[0].description" class="tile-icon">
                             <div class="tile-temp-group">
                                 <span class="tile-temp">{{ fav.main.temp | number:'1.0-0' }}°</span>
+                                <span class="tile-units">{{ units === 'metric' ? 'C' : 'F' }}</span>
                                 <span class="tile-desc">{{ fav.weather[0].description }}</span>
                             </div>
                         </div>
@@ -48,9 +49,9 @@
             </div>
 
             <div *ngIf="!loading && weatherData" class="weather-display">
-                <app-weather-card [weatherData]="weatherData"></app-weather-card>
-                <app-hourly-chart *ngIf="forecastData" [forecastData]="forecastData"></app-hourly-chart>
-                <app-forecast *ngIf="forecastData" [forecastData]="forecastData"></app-forecast>
+                <app-weather-card [weatherData]="weatherData" [units]="units"></app-weather-card>
+                <app-hourly-chart *ngIf="forecastData" [forecastData]="forecastData" [units]="units"></app-hourly-chart>
+                <app-forecast *ngIf="forecastData" [forecastData]="forecastData" [units]="units"></app-forecast>
             </div>
 
             <div *ngIf="!loading && !weatherData && !error" class="welcome-message">

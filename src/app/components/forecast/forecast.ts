@@ -11,6 +11,7 @@ import { ForecastData } from '../../models/weather.model';
 })
 export class Forecast implements OnChanges {
   @Input() forecastData?: ForecastData;
+  @Input() units: string = 'metric';
   dailyForecasts: any[] = [];
 
   ngOnChanges(): void {

@@ -13,6 +13,7 @@ import { FavoritesService } from '../../services/favorites.service';
 })
 export class WeatherCard {
   @Input() weatherData?: WeatherData;
+  @Input() units: string = 'metric';
   @Output() favoriteToggled = new EventEmitter<void>();
 
   constructor(private favoritesService: FavoritesService) { }

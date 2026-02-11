@@ -18,7 +18,8 @@
             <img [src]="'https://openweathermap.org/img/wn/' + weatherData.weather[0].icon + '@4x.png'"
                 [alt]="weatherData.weather[0].description" class="weather-icon" />
             <div class="temp-container">
-                <span class="temperature">{{ weatherData.main.temp | number: '1.0-1' }}°C</span>
+                <span class="temperature">{{ weatherData.main.temp | number: '1.0-1' }}°{{ units === 'metric' ? 'C' :
+                    'F' }}</span>
                 <span class="description">{{ weatherData.weather[0].description }}</span>
             </div>
         </div>
@@ -26,7 +27,8 @@
         <div class="weather-details">
             <div class="detail-item">
                 <span class="label">Feels like</span>
-                <span class="value">{{ weatherData.main.feels_like | number: '1.0-1' }}°C</span>
+                <span class="value">{{ weatherData.main.feels_like | number: '1.0-1' }}°{{ units === 'metric' ? 'C' :
+                    'F' }}</span>
             </div>
             <div class="detail-item">
                 <span class="label">Humidity</span>
