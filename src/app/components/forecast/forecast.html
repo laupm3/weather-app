@@ -1,0 +1,12 @@
+<div class="forecast-container">
+    <h3>5-Day Forecast</h3>
+    <div class="forecast-grid">
+        <div *ngFor="let day of dailyForecasts" class="forecast-item">
+            <p class="day-name">{{ day.dt * 1000 | date: 'EEE' }}</p>
+            <img [src]="'https://openweathermap.org/img/wn/' + day.weather[0].icon + '.png'"
+                [alt]="day.weather[0].description" />
+            <p class="temp">{{ day.main.temp | number: '1.0-0' }}°C</p>
+            <p class="desc">{{ day.weather[0].description }}</p>
+        </div>
+    </div>
+</div>

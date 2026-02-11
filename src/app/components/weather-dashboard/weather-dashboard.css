@@ -1,0 +1,119 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+.dashboard-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    transition: background 1s ease;
+}
+
+.dashboard-container.clear-sky {
+    background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+}
+
+.dashboard-container.cloudy-sky {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+}
+
+.dashboard-container.rainy-sky {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+.dashboard-container.snowy-sky {
+    background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+    color: #1e293b;
+}
+
+.dashboard-container.thunderstorm-sky {
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+}
+
+.dashboard-container.snowy-sky h1 {
+    -webkit-text-fill-color: #1e293b;
+}
+
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dashboard-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 4rem;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #38bdf8;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-message {
+    text-align: center;
+    margin-top: 4rem;
+    opacity: 0.7;
+}
+
+.weather-display {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
