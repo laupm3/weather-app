@@ -66,6 +66,30 @@ export class LanguageService {
         'VISIBILITY': {
             en: 'Visibility',
             es: 'Visibilidad'
+        },
+        'APP_TITLE': {
+            en: 'Weather Intelligence',
+            es: 'Inteligencia Climática'
+        },
+        'QUICK_ACCESS': {
+            en: 'Your Locations',
+            es: 'Tus Ubicaciones'
+        },
+        'REMOVE': {
+            en: 'Remove',
+            es: 'Eliminar'
+        },
+        'TOGGLE_FAVORITE': {
+            en: 'Toggle favorite',
+            es: 'Alternar favorito'
+        },
+        'CHART_TITLE': {
+            en: '24h Temperature Evolution',
+            es: 'Evolución Temp. 24h'
+        },
+        'CHART_LABEL': {
+            en: 'Temperature',
+            es: 'Temperatura'
         }
     };
 

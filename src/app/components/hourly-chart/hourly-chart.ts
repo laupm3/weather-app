@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { ForecastData } from '../../models/weather.model';
+import { LanguageService } from '../../services/language.service';
 
 Chart.register(...registerables);
 
@@ -12,21 +13,35 @@ Chart.register(...registerables);
     templateUrl: './hourly-chart.html',
     styleUrl: './hourly-chart.css'
 })
-export class HourlyChart implements OnChanges, AfterViewInit {
+export class HourlyChart implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() forecastData!: ForecastData;
     @Input() units: string = 'metric';
     @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
     private chart: Chart | null = null;
 
-    constructor(private cdr: ChangeDetectorRef) { }
+    private langSubscription?: any;
+
+    constructor(
+        private cdr: ChangeDetectorRef,
+        public langService: LanguageService
+    ) { }
+
+    ngOnInit(): void {
+        this.langSubscription = this.langService.currentLang$.subscribe(() => {
+            if (this.chart) {
+                this.updateChart();
+            }
+            this.cdr.detectChanges();
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.langSubscription?.unsubscribe();
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['forecastData'] && this.chart) {
-            this.updateChart();
-            this.cdr.detectChanges();
-        }
-        if (changes['units'] && this.chart) {
+        if ((changes['forecastData'] || changes['units']) && this.chart) {
             this.updateChart();
             this.cdr.detectChanges();
         }
@@ -60,7 +75,7 @@ export class HourlyChart implements OnChanges, AfterViewInit {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Temperature',
+                    label: this.langService.get('CHART_LABEL'),
                     data: temps,
                     borderColor: '#ffffff',
                     borderWidth: 3,
@@ -126,6 +141,7 @@ export class HourlyChart implements OnChanges, AfterViewInit {
             };
         }
 
+        this.chart.data.datasets[0].label = this.langService.get('CHART_LABEL');
         this.chart.update();
     }
 }

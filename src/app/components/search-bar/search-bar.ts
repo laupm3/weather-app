@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
@@ -23,14 +23,20 @@ export class SearchBar implements OnInit, OnDestroy {
 
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
+  private langSubscription?: Subscription;
 
   constructor(
     private weatherService: WeatherService,
-    public langService: LanguageService
+    public langService: LanguageService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
   ngOnInit(): void {
+    this.langSubscription = this.langService.currentLang$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+
     this.searchSubscription = this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -39,7 +45,7 @@ export class SearchBar implements OnInit, OnDestroy {
           this.suggestions = [];
           return [];
         }
-        return this.weatherService.searchCities(query).pipe(
+        return this.weatherService.searchCities(query, this.langService.getCurrentLang()).pipe(
           catchError(() => [])
         );
       })
@@ -52,6 +58,7 @@ export class SearchBar implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
+    this.langSubscription?.unsubscribe();
   }
 
   onInput(event: any): void {

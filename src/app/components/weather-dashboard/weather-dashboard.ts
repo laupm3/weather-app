@@ -61,7 +61,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
           return EMPTY;
         }
 
-        const requests = favs.map(city => this.weatherService.getWeather(city, this.units).pipe(
+        const requests = favs.map(city => this.weatherService.getWeather(city, this.units, this.langService.getCurrentLang()).pipe(
           catchError(() => EMPTY)
         ));
         return forkJoin(requests);
@@ -85,12 +85,12 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         this.lastQuery = query;
         const request = typeof query === 'string'
           ? forkJoin({
-            weather: this.weatherService.getWeather(query, this.units),
-            forecast: this.weatherService.getForecast(query, this.units)
+            weather: this.weatherService.getWeather(query, this.units, this.langService.getCurrentLang()),
+            forecast: this.weatherService.getForecast(query, this.units, this.langService.getCurrentLang())
           })
           : forkJoin({
-            weather: this.weatherService.getWeatherByCoords(query.lat, query.lon, this.units),
-            forecast: this.weatherService.getForecastByCoords(query.lat, query.lon, this.units)
+            weather: this.weatherService.getWeatherByCoords(query.lat, query.lon, this.units, this.langService.getCurrentLang()),
+            forecast: this.weatherService.getForecastByCoords(query.lat, query.lon, this.units, this.langService.getCurrentLang())
           });
 
         return request.pipe(
@@ -160,8 +160,14 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     }
 
     // También refrescamos el clima de los favoritos
-    this.favoritesService.refresh(); // Asumiendo que refresh dispara el observable de favoritos de nuevo
-    // O simplemente forzamos una recarga manual de favoriteWeatherData si refresh no existe
+    this.favoritesService.refresh();
+
+    // Refresh current search when language changes
+    this.langService.currentLang$.subscribe(() => {
+      if (this.lastQuery) {
+        this.searchSubject.next(this.lastQuery);
+      }
+    });
   }
 
   getWeatherClass(): string {

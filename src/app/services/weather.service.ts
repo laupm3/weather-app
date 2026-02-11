@@ -13,33 +13,33 @@ export class WeatherService {
 
   constructor(private http: HttpClient) { }
 
-  searchCities(query: string): Observable<CitySuggestion[]> {
+  searchCities(query: string, lang: string = 'en'): Observable<CitySuggestion[]> {
     return this.http.get<CitySuggestion[]>(
-      `${this.geoUrl}/direct?q=${query}&limit=5&appid=${this.apiKey}`
+      `${this.geoUrl}/direct?q=${query}&limit=5&appid=${this.apiKey}&lang=${lang}`
     );
   }
 
-  getWeather(city: string, units: string = 'metric'): Observable<WeatherData> {
+  getWeather(city: string, units: string = 'metric', lang: string = 'en'): Observable<WeatherData> {
     return this.http.get<WeatherData>(
-      `${this.apiUrl}/weather?q=${city}&appid=${this.apiKey}&units=${units}`
+      `${this.apiUrl}/weather?q=${city}&appid=${this.apiKey}&units=${units}&lang=${lang}`
     );
   }
 
-  getWeatherByCoords(lat: number, lon: number, units: string = 'metric'): Observable<WeatherData> {
+  getWeatherByCoords(lat: number, lon: number, units: string = 'metric', lang: string = 'en'): Observable<WeatherData> {
     return this.http.get<WeatherData>(
-      `${this.apiUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}`
+      `${this.apiUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}&lang=${lang}`
     );
   }
 
-  getForecast(city: string, units: string = 'metric'): Observable<ForecastData> {
+  getForecast(city: string, units: string = 'metric', lang: string = 'en'): Observable<ForecastData> {
     return this.http.get<ForecastData>(
-      `${this.apiUrl}/forecast?q=${city}&appid=${this.apiKey}&units=${units}`
+      `${this.apiUrl}/forecast?q=${city}&appid=${this.apiKey}&units=${units}&lang=${lang}`
     );
   }
 
-  getForecastByCoords(lat: number, lon: number, units: string = 'metric'): Observable<ForecastData> {
+  getForecastByCoords(lat: number, lon: number, units: string = 'metric', lang: string = 'en'): Observable<ForecastData> {
     return this.http.get<ForecastData>(
-      `${this.apiUrl}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}`
+      `${this.apiUrl}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}&lang=${lang}`
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { WeatherData } from '../../models/weather.model';
 import { FavoritesService } from '../../services/favorites.service';
@@ -12,15 +12,27 @@ import { LanguageService } from '../../services/language.service';
   styleUrl: './weather-card.css',
   providers: [DecimalPipe]
 })
-export class WeatherCard {
+export class WeatherCard implements OnInit, OnDestroy {
   @Input() weatherData?: WeatherData;
   @Input() units: string = 'metric';
   @Output() favoriteToggled = new EventEmitter<void>();
+  private langSubscription?: any;
 
   constructor(
     private favoritesService: FavoritesService,
-    public langService: LanguageService
+    public langService: LanguageService,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  ngOnInit(): void {
+    this.langSubscription = this.langService.currentLang$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
+  }
 
   isFavorite(): boolean {
     return !!this.weatherData && this.favoritesService.isFavorite(this.weatherData.name);

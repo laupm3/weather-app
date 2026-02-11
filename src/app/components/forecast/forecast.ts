@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ForecastData } from '../../models/weather.model';
 import { LanguageService } from '../../services/language.service';
@@ -10,12 +10,27 @@ import { LanguageService } from '../../services/language.service';
   templateUrl: './forecast.html',
   styleUrl: './forecast.css',
 })
-export class Forecast implements OnChanges {
+export class Forecast implements OnInit, OnChanges, OnDestroy {
   @Input() forecastData?: ForecastData;
   @Input() units: string = 'metric';
   dailyForecasts: any[] = [];
 
-  constructor(public langService: LanguageService) { }
+  private langSubscription?: any;
+
+  constructor(
+    public langService: LanguageService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  ngOnInit(): void {
+    this.langSubscription = this.langService.currentLang$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
+  }
 
 
   ngOnChanges(): void {

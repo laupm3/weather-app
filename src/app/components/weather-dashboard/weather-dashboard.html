@@ -9,7 +9,7 @@
     <div class="inner-content">
         <header class="dashboard-header">
             <div class="header-main">
-                <h1>Weather Intelligence</h1>
+                <h1>{{ langService.get('APP_TITLE') }}</h1>
                 <div class="unit-toggle" (click)="toggleUnits()"
                     [title]="'Switch to ' + (units === 'metric' ? 'Fahrenheit' : 'Celsius')">
                     <span [class.active]="units === 'metric'">°C</span>
@@ -29,12 +29,13 @@
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>
 
             <div *ngIf="favoriteWeatherData.length > 0" class="quick-access">
-                <span class="section-label">Your Locations</span>
+                <span class="section-label">{{ langService.get('QUICK_ACCESS') }}</span>
                 <div class="fav-grid">
                     <div *ngFor="let fav of favoriteWeatherData" class="fav-tile" (click)="handleCitySearch(fav.name)">
                         <div class="tile-header">
                             <span class="tile-city">{{ fav.name }}</span>
-                            <button class="tile-remove" (click)="removeFavorite(fav.name, $event)" title="Remove">
+                            <button class="tile-remove" (click)="removeFavorite(fav.name, $event)"
+                                [title]="langService.get('REMOVE')">
                                 &times;
                             </button>
                         </div>
@@ -69,7 +70,7 @@
             </div>
 
             <div *ngIf="!loading && !weatherData && !error" class="welcome-message">
-                <p>Ready to discover the weather?</p>
+                <p>{{ langService.get('WELCOME_MSG') }}</p>
             </div>
         </main>
     </div>
