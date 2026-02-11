@@ -20,6 +20,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   weatherData?: WeatherData;
   forecastData?: ForecastData;
   favorites: string[] = [];
+  favoriteWeatherData: WeatherData[] = [];
   error: string | null = null;
   loading: boolean = false;
 
@@ -33,8 +34,22 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.favSubscription = this.favoritesService.getFavorites().subscribe((favs: string[]) => {
-      this.favorites = favs;
+    // Escuchamos cambios en favoritos y cargamos sus datos climáticos
+    this.favSubscription = this.favoritesService.getFavorites().pipe(
+      switchMap((favs: string[]) => {
+        this.favorites = favs;
+        if (favs.length === 0) {
+          this.favoriteWeatherData = [];
+          return EMPTY;
+        }
+        // Cargamos el clima de todas las ciudades favoritas en paralelo
+        const requests = favs.map(city => this.weatherService.getWeather(city).pipe(
+          catchError(() => EMPTY) // Si falla una, seguimos con las demás
+        ));
+        return forkJoin(requests);
+      })
+    ).subscribe((data: WeatherData[]) => {
+      this.favoriteWeatherData = data;
     });
 
     this.searchSubscription = this.searchSubject.pipe(
