@@ -3,6 +3,15 @@
         <header class="dashboard-header">
             <h1>Weather Intelligence</h1>
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>
+
+            <div *ngIf="favorites.length > 0" class="favorites-bar">
+                <span class="fav-label">Favorites:</span>
+                <div class="fav-list">
+                    <button *ngFor="let fav of favorites" (click)="handleCitySearch(fav)" class="fav-item">
+                        {{ fav }}
+                    </button>
+                </div>
+            </div>
         </header>
 
         <main class="dashboard-content">

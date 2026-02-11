@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { forkJoin, Subject, Subscription, EMPTY } from 'rxjs';
 import { switchMap, catchError, tap } from 'rxjs/operators';
 import { WeatherService } from '../../services/weather.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { SearchBar } from '../search-bar/search-bar';
 import { WeatherCard } from '../weather-card/weather-card';
 import { Forecast } from '../forecast/forecast';
@@ -18,15 +19,24 @@ import { WeatherData, ForecastData } from '../../models/weather.model';
 export class WeatherDashboard implements OnInit, OnDestroy {
   weatherData?: WeatherData;
   forecastData?: ForecastData;
+  favorites: string[] = [];
   error: string | null = null;
   loading: boolean = false;
 
   private searchSubject = new Subject<string | { lat: number; lon: number }>();
   private searchSubscription?: Subscription;
+  private favSubscription?: Subscription;
 
-  constructor(private weatherService: WeatherService) { }
+  constructor(
+    private weatherService: WeatherService,
+    private favoritesService: FavoritesService
+  ) { }
 
   ngOnInit(): void {
+    this.favSubscription = this.favoritesService.getFavorites().subscribe((favs: string[]) => {
+      this.favorites = favs;
+    });
+
     this.searchSubscription = this.searchSubject.pipe(
       tap(() => {
         this.loading = true;
