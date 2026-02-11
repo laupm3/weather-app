@@ -1,60 +1,75 @@
 .forecast-container {
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .forecast-container h3 {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    padding-left: 0.5rem;
 }
 
 .forecast-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .forecast-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1rem;
-    padding: 1.25rem;
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2rem;
+    padding: 1.75rem 1rem;
     text-align: center;
-    transition: transform 0.3s ease, background 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .forecast-item:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
 
 .day-name {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.1rem;
     margin: 0;
-    color: #38bdf8;
+    text-transform: uppercase;
+    color: var(--text-muted);
 }
 
 .forecast-item img {
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
+    margin: 0.5rem 0;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
 }
 
 .temp {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 800;
     margin: 0.5rem 0;
 }
 
 .desc {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
     text-transform: capitalize;
     opacity: 0.6;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .forecast-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .forecast-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

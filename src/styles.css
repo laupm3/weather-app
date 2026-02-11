@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary-font: 'Outfit', sans-serif;
+    --bg-clear: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+    --bg-cloudy: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    --bg-rainy: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+    --bg-snowy: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+    --bg-thunder: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
+    --bg-default: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    --text-white: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--primary-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--text-white);
+    overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
+}
+
+input {
+    font-family: inherit;
+}
