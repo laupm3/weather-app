@@ -27,6 +27,10 @@ export class FavoritesService {
         this.favoritesSubject.next(filtered);
     }
 
+    refresh(): void {
+        this.favoritesSubject.next(this.loadFavorites());
+    }
+
     isFavorite(city: string): boolean {
         return this.loadFavorites().includes(city);
     }

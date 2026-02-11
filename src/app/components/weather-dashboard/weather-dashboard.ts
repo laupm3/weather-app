@@ -23,6 +23,8 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   favoriteWeatherData: WeatherData[] = [];
   error: string | null = null;
   loading: boolean = false;
+  units: string = 'metric';
+  private lastQuery: string | { lat: number; lon: number } | null = null;
 
   private searchSubject = new Subject<string | { lat: number; lon: number }>();
   private searchSubscription?: Subscription;
@@ -33,7 +35,12 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     private favoritesService: FavoritesService,
     private zone: NgZone,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {
+    const savedUnits = localStorage.getItem('weather-units');
+    if (savedUnits) {
+      this.units = savedUnits;
+    }
+  }
 
   ngOnInit(): void {
     this.favSubscription = this.favoritesService.getFavorites().pipe(
@@ -51,7 +58,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
           return EMPTY;
         }
 
-        const requests = favs.map(city => this.weatherService.getWeather(city).pipe(
+        const requests = favs.map(city => this.weatherService.getWeather(city, this.units).pipe(
           catchError(() => EMPTY)
         ));
         return forkJoin(requests);
@@ -72,14 +79,15 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         });
       }),
       switchMap(query => {
+        this.lastQuery = query;
         const request = typeof query === 'string'
           ? forkJoin({
-            weather: this.weatherService.getWeather(query),
-            forecast: this.weatherService.getForecast(query)
+            weather: this.weatherService.getWeather(query, this.units),
+            forecast: this.weatherService.getForecast(query, this.units)
           })
           : forkJoin({
-            weather: this.weatherService.getWeatherByCoords(query.lat, query.lon),
-            forecast: this.weatherService.getForecastByCoords(query.lat, query.lon)
+            weather: this.weatherService.getWeatherByCoords(query.lat, query.lon, this.units),
+            forecast: this.weatherService.getForecastByCoords(query.lat, query.lon, this.units)
           });
 
         return request.pipe(
@@ -137,6 +145,20 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   removeFavorite(city: string, event: Event): void {
     event.stopPropagation();
     this.favoritesService.removeFavorite(city);
+  }
+
+  toggleUnits(): void {
+    this.units = this.units === 'metric' ? 'imperial' : 'metric';
+    localStorage.setItem('weather-units', this.units);
+
+    // Si tenemos una búsqueda activa, la refrescamos con las nuevas unidades
+    if (this.lastQuery) {
+      this.searchSubject.next(this.lastQuery);
+    }
+
+    // También refrescamos el clima de los favoritos
+    this.favoritesService.refresh(); // Asumiendo que refresh dispara el observable de favoritos de nuevo
+    // O simplemente forzamos una recarga manual de favoriteWeatherData si refresh no existe
   }
 
   getWeatherClass(): string {

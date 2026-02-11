@@ -1,7 +1,17 @@
 <div class="dashboard-container" [ngClass]="getWeatherClass()">
     <div class="inner-content">
         <header class="dashboard-header">
-            <h1>Weather Intelligence</h1>
+            <div class="header-main">
+                <h1>Weather Intelligence</h1>
+                <div class="unit-toggle" (click)="toggleUnits()"
+                    [title]="'Switch to ' + (units === 'metric' ? 'Fahrenheit' : 'Celsius')">
+                    <span [class.active]="units === 'metric'">°C</span>
+                    <div class="toggle-track">
+                        <div class="toggle-thumb" [class.imperial]="units === 'imperial'"></div>
+                    </div>
+                    <span [class.active]="units === 'imperial'">°F</span>
+                </div>
+            </div>
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>
 
             <div *ngIf="favoriteWeatherData.length > 0" class="quick-access">

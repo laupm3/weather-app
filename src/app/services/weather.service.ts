@@ -12,27 +12,27 @@ export class WeatherService {
 
   constructor(private http: HttpClient) { }
 
-  getWeather(city: string): Observable<WeatherData> {
+  getWeather(city: string, units: string = 'metric'): Observable<WeatherData> {
     return this.http.get<WeatherData>(
-      `${this.apiUrl}/weather?q=${city}&appid=${this.apiKey}&units=metric`
+      `${this.apiUrl}/weather?q=${city}&appid=${this.apiKey}&units=${units}`
     );
   }
 
-  getWeatherByCoords(lat: number, lon: number): Observable<WeatherData> {
+  getWeatherByCoords(lat: number, lon: number, units: string = 'metric'): Observable<WeatherData> {
     return this.http.get<WeatherData>(
-      `${this.apiUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`
+      `${this.apiUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}`
     );
   }
 
-  getForecast(city: string): Observable<ForecastData> {
+  getForecast(city: string, units: string = 'metric'): Observable<ForecastData> {
     return this.http.get<ForecastData>(
-      `${this.apiUrl}/forecast?q=${city}&appid=${this.apiKey}&units=metric`
+      `${this.apiUrl}/forecast?q=${city}&appid=${this.apiKey}&units=${units}`
     );
   }
 
-  getForecastByCoords(lat: number, lon: number): Observable<ForecastData> {
+  getForecastByCoords(lat: number, lon: number, units: string = 'metric'): Observable<ForecastData> {
     return this.http.get<ForecastData>(
-      `${this.apiUrl}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`
+      `${this.apiUrl}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=${units}`
     );
   }
 }
