@@ -21,7 +21,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   error: string | null = null;
   loading: boolean = false;
 
-  private searchSubject = new Subject<string>();
+  private searchSubject = new Subject<string | { lat: number; lon: number }>();
   private searchSubscription?: Subscription;
 
   constructor(private weatherService: WeatherService) { }
@@ -32,26 +32,50 @@ export class WeatherDashboard implements OnInit, OnDestroy {
         this.loading = true;
         this.error = null;
       }),
-      switchMap(city =>
-        forkJoin({
-          weather: this.weatherService.getWeather(city),
-          forecast: this.weatherService.getForecast(city)
-        }).pipe(
+      switchMap(query => {
+        const request = typeof query === 'string'
+          ? forkJoin({
+            weather: this.weatherService.getWeather(query),
+            forecast: this.weatherService.getForecast(query)
+          })
+          : forkJoin({
+            weather: this.weatherService.getWeatherByCoords(query.lat, query.lon),
+            forecast: this.weatherService.getForecastByCoords(query.lat, query.lon)
+          });
+
+        return request.pipe(
           catchError(err => {
-            this.error = 'City not found or service unavailable.';
+            this.error = 'Weather data unavailable. Please try again.';
             this.loading = false;
             this.weatherData = undefined;
             this.forecastData = undefined;
-            console.error('Weather error:', err);
             return EMPTY;
           })
-        )
-      )
+        );
+      })
     ).subscribe(result => {
       this.weatherData = result.weather;
       this.forecastData = result.forecast;
       this.loading = false;
     });
+
+    this.getUserLocation();
+  }
+
+  private getUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.searchSubject.next({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          });
+        },
+        () => {
+          console.log('User denied geolocation or error occurred.');
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {
