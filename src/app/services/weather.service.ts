@@ -18,9 +18,21 @@ export class WeatherService {
     );
   }
 
+  getWeatherByCoords(lat: number, lon: number): Observable<WeatherData> {
+    return this.http.get<WeatherData>(
+      `${this.apiUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`
+    );
+  }
+
   getForecast(city: string): Observable<ForecastData> {
     return this.http.get<ForecastData>(
       `${this.apiUrl}/forecast?q=${city}&appid=${this.apiKey}&units=metric`
+    );
+  }
+
+  getForecastByCoords(lat: number, lon: number): Observable<ForecastData> {
+    return this.http.get<ForecastData>(
+      `${this.apiUrl}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`
     );
   }
 }
