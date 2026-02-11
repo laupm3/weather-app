@@ -4,12 +4,18 @@
             <h1>Weather Intelligence</h1>
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>
 
-            <div *ngIf="favorites.length > 0" class="favorites-bar">
-                <span class="fav-label">Favorites:</span>
-                <div class="fav-list">
-                    <button *ngFor="let fav of favorites" (click)="handleCitySearch(fav)" class="fav-item">
-                        {{ fav }}
-                    </button>
+            <div *ngIf="favorites.length > 0" class="quick-access">
+                <span class="section-label">Quick Access</span>
+                <div class="fav-grid">
+                    <div *ngFor="let fav of favorites" class="fav-pill" (click)="handleCitySearch(fav)">
+                        <span class="fav-name">{{ fav }}</span>
+                        <button class="remove-btn" (click)="removeFavorite(fav, $event)" title="Remove from favorites">
+                            <svg viewBox="0 0 24 24" class="remove-svg">
+                                <path
+                                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>

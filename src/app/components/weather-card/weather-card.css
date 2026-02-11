@@ -46,6 +46,54 @@
     letter-spacing: 0.1em;
 }
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.favorite-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.heart-svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 2;
+    transition: all 0.4s ease;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.favorite-btn.active {
+    background: rgba(255, 59, 48, 0.15);
+    border-color: rgba(255, 59, 48, 0.3);
+}
+
+.favorite-btn.active .heart-svg {
+    fill: #ff3b30;
+    stroke: #ff3b30;
+    filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.6));
+}
+
+
 .weather-main {
     display: flex;
     align-items: center;
