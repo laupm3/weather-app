@@ -1,0 +1,65 @@
+<div class="icon-container" [style.width.px]="size" [style.height.px]="size" [ngSwitch]="getIconType()">
+
+    <!-- CLEAR SKY -->
+    <svg *ngSwitchCase="'clear'" viewBox="0 0 100 100" class="weather-svg sun">
+        <circle cx="50" cy="50" r="20" fill="#fbbf24" filter="url(#glow)" />
+        <g class="sun-rays">
+            <line *ngFor="let i of [0,1,2,3,4,5,6,7]" x1="50" y1="20" x2="50" y2="10" stroke="#fbbf24" stroke-width="4"
+                stroke-linecap="round" [attr.transform]="'rotate(' + (i * 45) + ' 50 50)'" />
+        </g>
+        <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- CLOUDS -->
+    <svg *ngSwitchCase="'clouds'" viewBox="0 0 100 100" class="weather-svg clouds">
+        <path d="M25 65 A15 15 0 0 1 25 35 A20 20 0 0 1 65 35 A15 15 0 0 1 65 65 Z" fill="#cbd5e1" class="cloud-main" />
+        <path d="M40 75 A12 12 0 0 1 40 51 A16 16 0 0 1 72 51 A12 12 0 0 1 72 75 Z" fill="#94a3b8" class="cloud-back" />
+    </svg>
+
+    <!-- RAIN -->
+    <svg *ngSwitchCase="'rain'" viewBox="0 0 100 100" class="weather-svg rain">
+        <path d="M30 50 A12 12 0 0 1 30 26 A16 16 0 0 1 62 26 A12 12 0 0 1 62 50 Z" fill="#94a3b8" class="cloud-rain" />
+        <g class="rain-drops">
+            <line x1="40" y1="55" x2="35" y2="65" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"
+                class="drop d1" />
+            <line x1="55" y1="55" x2="50" y2="65" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"
+                class="drop d2" />
+            <line x1="47" y1="65" x2="42" y2="75" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"
+                class="drop d3" />
+        </g>
+    </svg>
+
+    <!-- THUNDERSTORM -->
+    <svg *ngSwitchCase="'thunderstorm'" viewBox="0 0 100 100" class="weather-svg thunder">
+        <path d="M30 50 A12 12 0 0 1 30 26 A16 16 0 0 1 62 26 A12 12 0 0 1 62 50 Z" fill="#475569"
+            class="cloud-thunder" />
+        <polyline points="45,50 35,65 50,65 40,85" stroke="#fbbf24" stroke-width="4" fill="none" stroke-linejoin="round"
+            class="bolt" />
+    </svg>
+
+    <!-- SNOW -->
+    <svg *ngSwitchCase="'snow'" viewBox="0 0 100 100" class="weather-svg snow">
+        <path d="M30 50 A12 12 0 0 1 30 26 A16 16 0 0 1 62 26 A12 12 0 0 1 62 50 Z" fill="#e2e8f0" class="cloud-snow" />
+        <g class="flakes">
+            <circle cx="40" cy="60" r="2" fill="white" class="flake f1" />
+            <circle cx="55" cy="65" r="2" fill="white" class="flake f2" />
+            <circle cx="45" cy="75" r="2" fill="white" class="flake f3" />
+        </g>
+    </svg>
+
+    <!-- MIST -->
+    <svg *ngSwitchCase="'mist'" viewBox="0 0 100 100" class="weather-svg mist">
+        <line x1="20" y1="40" x2="80" y2="40" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"
+            class="mist-line l1" />
+        <line x1="30" y1="55" x2="70" y2="55" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"
+            class="mist-line l2" />
+        <line x1="25" y1="70" x2="75" y2="70" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"
+            class="mist-line l3" />
+    </svg>
+
+</div>

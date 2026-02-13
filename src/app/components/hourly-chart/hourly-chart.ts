@@ -16,6 +16,7 @@ Chart.register(...registerables);
 export class HourlyChart implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() forecastData!: ForecastData;
     @Input() units: string = 'metric';
+    @Input() loading: boolean = false;
     @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
     private chart: Chart | null = null;
@@ -41,8 +42,13 @@ export class HourlyChart implements OnInit, OnChanges, AfterViewInit, OnDestroy 
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if ((changes['forecastData'] || changes['units']) && this.chart) {
-            this.updateChart();
+        if (changes['forecastData'] || changes['units']) {
+            if (this.chart) {
+                this.updateChart();
+            } else if (this.forecastData && !this.loading) {
+                // Si ya tenemos vista pero no chart (ej: terminó de cargar), lo creamos
+                setTimeout(() => this.createChart(), 0);
+            }
             this.cdr.detectChanges();
         }
     }

@@ -3,11 +3,12 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { WeatherData } from '../../models/weather.model';
 import { FavoritesService } from '../../services/favorites.service';
 import { LanguageService } from '../../services/language.service';
+import { WeatherIcon } from '../weather-icon/weather-icon';
 
 @Component({
   selector: 'app-weather-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, WeatherIcon],
   templateUrl: './weather-card.html',
   styleUrl: './weather-card.css',
   providers: [DecimalPipe]
@@ -15,6 +16,7 @@ import { LanguageService } from '../../services/language.service';
 export class WeatherCard implements OnInit, OnDestroy {
   @Input() weatherData?: WeatherData;
   @Input() units: string = 'metric';
+  @Input() loading: boolean = false;
   @Output() favoriteToggled = new EventEmitter<void>();
   private langSubscription?: any;
 

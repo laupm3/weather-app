@@ -16,6 +16,10 @@ export interface WeatherData {
         speed: number;
     };
     visibility: number;
+    sys: {
+        sunrise: number;
+        sunset: number;
+    };
     name: string;
     dt: number;
 }

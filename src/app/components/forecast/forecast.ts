@@ -2,17 +2,19 @@ import { Component, Input, OnChanges, OnInit, OnDestroy, ChangeDetectorRef } fro
 import { CommonModule } from '@angular/common';
 import { ForecastData } from '../../models/weather.model';
 import { LanguageService } from '../../services/language.service';
+import { WeatherIcon } from '../weather-icon/weather-icon';
 
 @Component({
   selector: 'app-forecast',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, WeatherIcon],
   templateUrl: './forecast.html',
   styleUrl: './forecast.css',
 })
 export class Forecast implements OnInit, OnChanges, OnDestroy {
   @Input() forecastData?: ForecastData;
   @Input() units: string = 'metric';
+  @Input() loading: boolean = false;
   dailyForecasts: any[] = [];
 
   private langSubscription?: any;

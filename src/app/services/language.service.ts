@@ -94,6 +94,10 @@ export class LanguageService {
         'CHART_LABEL': {
             en: 'Temperature',
             es: 'Temperatura'
+        },
+        'SUN_TIME': {
+            en: 'Sun Cycle',
+            es: 'Ciclo Solar'
         }
     };
 

@@ -1,60 +1,104 @@
-<div *ngIf="weatherData" class="weather-card">
-    <div class="card-header">
-        <div class="header-top">
-            <h2 class="city-name">{{ weatherData.name }}</h2>
-            <button class="favorite-btn" [class.active]="isFavorite()" (click)="toggleFavorite()"
-                [attr.aria-label]="langService.get('TOGGLE_FAVORITE')">
-                <svg viewBox="0 0 24 24" class="heart-svg">
-                    <path
-                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-            </button>
-        </div>
-        <p class="date">{{ weatherData.dt * 1000 | date: langService.get('DATE_FORMAT') : undefined :
-            langService.getCurrentLang() }}</p>
-    </div>
-
-    <div class="card-body">
-        <div class="weather-main">
-            <img [src]="'https://openweathermap.org/img/wn/' + weatherData.weather[0].icon + '@4x.png'"
-                [alt]="weatherData.weather[0].description" class="weather-icon" />
-            <div class="temp-container">
-                <span class="temperature">{{ weatherData.main.temp | number: '1.0-1' }}°{{ units === 'metric' ? 'C' :
-                    'F' }}</span>
-                <span class="description">{{ weatherData.weather[0].description }}</span>
+<div *ngIf="weatherData || loading" class="weather-card">
+    <ng-container *ngIf="!loading && weatherData; else skeletonCard">
+        <div class="card-header">
+            <div class="header-top">
+                <h2 class="city-name">{{ weatherData.name }}</h2>
+                <button class="favorite-btn" [class.active]="isFavorite()" (click)="toggleFavorite()"
+                    [attr.aria-label]="langService.get('TOGGLE_FAVORITE')">
+                    <svg viewBox="0 0 24 24" class="heart-svg">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </button>
             </div>
+            <p class="date">{{ weatherData.dt * 1000 | date: langService.get('DATE_FORMAT') : undefined :
+                langService.getCurrentLang() }}</p>
         </div>
 
-        <div class="details-grid">
-            <div class="detail-card glass">
-                <div class="detail-icon">💧</div>
-                <div class="detail-info">
-                    <span class="detail-label">{{ langService.get('HUMIDITY') }}</span>
-                    <span class="detail-value">{{ weatherData.main.humidity }}%</span>
+        <div class="card-body">
+            <div class="weather-main">
+                <app-weather-icon [iconCode]="weatherData.weather[0].icon" [size]="120"></app-weather-icon>
+                <div class="temp-container">
+                    <span class="temperature">{{ weatherData.main.temp | number: '1.0-1' }}°{{ units === 'metric' ? 'C'
+                        :
+                        'F' }}</span>
+                    <span class="description">{{ weatherData.weather[0].description }}</span>
                 </div>
             </div>
-            <div class="detail-card glass">
-                <div class="detail-icon">💨</div>
-                <div class="detail-info">
-                    <span class="detail-label">{{ langService.get('WIND_SPEED') }}</span>
-                    <span class="detail-value">{{ weatherData.wind.speed }} {{ units === 'metric' ? 'm/s' : 'mph'
-                        }}</span>
+
+            <div class="details-grid">
+                <div class="detail-card glass" [attr.title]="langService.get('HUMIDITY')">
+                    <div class="detail-icon">
+                        <svg viewBox="0 0 24 24" class="icon-svg humidity">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="detail-info">
+                        <span class="detail-label">{{ langService.get('HUMIDITY') }}</span>
+                        <span class="detail-value">{{ weatherData.main.humidity }}%</span>
+                    </div>
                 </div>
-            </div>
-            <div class="detail-card glass">
-                <div class="detail-icon">🌡️</div>
-                <div class="detail-info">
-                    <span class="detail-label">{{ langService.get('FEELS_LIKE') }}</span>
-                    <span class="detail-value">{{ weatherData.main.feels_like | number: '1.0-1' }}°</span>
+                <div class="detail-card glass" [attr.title]="langService.get('WIND_SPEED')">
+                    <div class="detail-icon">
+                        <svg viewBox="0 0 24 24" class="icon-svg wind">
+                            <path
+                                d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 15.5 12H2"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="detail-info">
+                        <span class="detail-label">{{ langService.get('WIND_SPEED') }}</span>
+                        <span class="detail-value">{{ weatherData.wind.speed }} {{ units === 'metric' ? 'm/s' : 'mph'
+                            }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="detail-card glass">
-                <div class="detail-icon">👁️</div>
-                <div class="detail-info">
-                    <span class="detail-label">{{ langService.get('VISIBILITY') }}</span>
-                    <span class="detail-value">{{ weatherData.visibility / 1000 }} km</span>
+                <div class="detail-card glass" [attr.title]="langService.get('FEELS_LIKE')">
+                    <div class="detail-icon">
+                        <svg viewBox="0 0 24 24" class="icon-svg feels">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="detail-info">
+                        <span class="detail-label">{{ langService.get('FEELS_LIKE') }}</span>
+                        <span class="detail-value">{{ weatherData.main.feels_like | number: '1.0-1' }}°</span>
+                    </div>
+                </div>
+                <div class="detail-card glass" [attr.title]="langService.get('VISIBILITY')">
+                    <div class="detail-icon">
+                        <svg viewBox="0 0 24 24" class="icon-svg visibility">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="detail-info">
+                        <span class="detail-label">{{ langService.get('VISIBILITY') }}</span>
+                        <span class="detail-value">{{ (weatherData.visibility / 1000) | number: '1.0-1' }} km</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+
+    <ng-template #skeletonCard>
+        <div class="card-header">
+            <div class="skeleton" style="width: 90%; height: 4.2rem; margin-bottom: 0.5rem;"></div>
+            <div class="skeleton" style="width: 50%; height: 1.5rem;"></div>
+        </div>
+        <div class="card-body">
+            <div class="weather-main">
+                <div class="skeleton" style="width: 160px; height: 160px; border-radius: 50%;"></div>
+                <div class="temp-container" style="flex: 1;">
+                    <div class="skeleton" style="width: 100%; height: 7rem; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton" style="width: 60%; height: 2rem;"></div>
+                </div>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card glass skeleton" style="height: 5.2rem;" *ngFor="let i of [1,2,3,4]"></div>
+            </div>
+        </div>
+    </ng-template>
 </div>

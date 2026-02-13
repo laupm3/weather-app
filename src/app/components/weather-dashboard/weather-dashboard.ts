@@ -9,23 +9,30 @@ import { SearchBar } from '../search-bar/search-bar';
 import { WeatherCard } from '../weather-card/weather-card';
 import { Forecast } from '../forecast/forecast';
 import { HourlyChart } from '../hourly-chart/hourly-chart';
+import { SunArch } from '../sun-arch/sun-arch';
+import { WeatherIcon } from '../weather-icon/weather-icon';
 import { WeatherData, ForecastData } from '../../models/weather.model';
 
 @Component({
   selector: 'app-weather-dashboard',
   standalone: true,
-  imports: [CommonModule, SearchBar, WeatherCard, Forecast, HourlyChart],
+  imports: [CommonModule, SearchBar, WeatherCard, Forecast, HourlyChart, SunArch, WeatherIcon],
   templateUrl: './weather-dashboard.html',
   styleUrl: './weather-dashboard.css',
 })
 export class WeatherDashboard implements OnInit, OnDestroy {
   weatherData?: WeatherData;
-  forecastData?: ForecastData;
+  forecastData?: ForecastData; // Main weather data signals
   favorites: string[] = [];
   favoriteWeatherData: WeatherData[] = [];
   error: string | null = null;
   loading: boolean = false;
   units: string = 'metric';
+
+  // Parallax offsets
+  offsetX: number = 0;
+  offsetY: number = 0;
+
   private lastQuery: string | { lat: number; lon: number } | null = null;
 
   private searchSubject = new Subject<string | { lat: number; lon: number }>();
@@ -34,7 +41,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
   constructor(
     private weatherService: WeatherService,
-    private favoritesService: FavoritesService,
+    public favoritesService: FavoritesService,
     public langService: LanguageService,
     private zone: NgZone,
     private cdr: ChangeDetectorRef
@@ -138,6 +145,27 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     });
 
     this.getUserLocation();
+    this.initParallax();
+  }
+
+  private initParallax(): void {
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) - 0.5;
+        const y = (e.clientY / window.innerHeight) - 0.5;
+
+        // Suave interpolación o simplemente actualización
+        this.offsetX = x * 30; // 30px max mov
+        this.offsetY = y * 30;
+
+        // Actualizamos directamente el estilo para máximo rendimiento
+        const blobs = document.querySelectorAll('.blob');
+        blobs.forEach((blob: any, index) => {
+          const factor = (index + 1) * 0.5;
+          blob.style.transform = `translate(${this.offsetX * factor}px, ${this.offsetY * factor}px)`;
+        });
+      });
+    });
   }
 
   private getUserLocation(): void {

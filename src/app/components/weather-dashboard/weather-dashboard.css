@@ -36,7 +36,8 @@
     border-radius: 50%;
     filter: blur(80px);
     mix-blend-mode: soft-light;
-    animation: move 20s infinite alternate;
+    /* transition: transform 0.2s ease-out; removed to avoid conflict with direct style updates */
+    will-change: transform;
 }
 
 .blob-1 {
@@ -300,6 +301,24 @@
     transform: translateY(-5px) scale(1.02);
     border-color: rgba(255, 255, 255, 0.25);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.forecast-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.forecast-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .forecast-top {
+        grid-template-columns: 1fr;
+    }
 }
 
 .tile-header {

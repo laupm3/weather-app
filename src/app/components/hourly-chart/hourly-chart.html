@@ -2,7 +2,8 @@
     <div class="chart-header">
         <span class="chart-title">{{ langService.get('CHART_TITLE') }}</span>
     </div>
-    <div class="canvas-wrapper">
-        <canvas #chartCanvas></canvas>
+    <div class="canvas-wrapper" [class.skeleton-v]="loading">
+        <canvas #chartCanvas [style.visibility]="loading ? 'hidden' : 'visible'"></canvas>
+        <div *ngIf="loading" class="chart-skeleton skeleton"></div>
     </div>
 </div>

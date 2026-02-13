@@ -37,8 +37,7 @@
                             &times;
                         </button>
                         <div class="tile-body">
-                            <img [src]="'https://openweathermap.org/img/wn/' + fav.weather[0].icon + '@2x.png'"
-                                [alt]="fav.weather[0].description" class="tile-icon">
+                            <app-weather-icon [iconCode]="fav.weather[0].icon" [size]="40"></app-weather-icon>
                             <div class="tile-temp-group">
                                 <span class="tile-temp">{{ fav.main.temp | number:'1.0-0' }}°</span>
                                 <span class="tile-units">{{ units === 'metric' ? 'C' : 'F' }}</span>
@@ -53,19 +52,24 @@
         </header>
 
         <main class="dashboard-content">
-            <div *ngIf="loading" class="loader-container">
-                <div class="loader"></div>
-                <p>{{ langService.get('ANALYZING_MSG') }}</p>
-            </div>
 
             <div *ngIf="error" class="error-message">
                 {{ error }}
             </div>
 
-            <div *ngIf="!loading && weatherData" class="weather-display">
-                <app-weather-card [weatherData]="weatherData" [units]="units"></app-weather-card>
-                <app-hourly-chart *ngIf="forecastData" [forecastData]="forecastData" [units]="units"></app-hourly-chart>
-                <app-forecast *ngIf="forecastData" [forecastData]="forecastData" [units]="units"></app-forecast>
+            <div class="weather-display" *ngIf="weatherData || loading">
+                <app-weather-card [weatherData]="weatherData" [units]="units" [loading]="loading"
+                    (favoriteToggled)="favoritesService.refresh()">
+                </app-weather-card>
+
+                <div class="forecast-section" *ngIf="forecastData || loading">
+                    <div class="forecast-top">
+                        <app-hourly-chart [forecastData]="forecastData!" [units]="units"
+                            [loading]="loading"></app-hourly-chart>
+                        <app-sun-arch [weatherData]="weatherData" [loading]="loading"></app-sun-arch>
+                    </div>
+                    <app-forecast [forecastData]="forecastData" [units]="units" [loading]="loading"></app-forecast>
+                </div>
             </div>
 
             <div *ngIf="!loading && !weatherData && !error" class="welcome-message">
