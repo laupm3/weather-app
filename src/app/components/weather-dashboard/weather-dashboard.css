@@ -473,6 +473,46 @@
 
 @media (max-width: 640px) {
     .dashboard-container {
-        padding: 3rem 1.5rem;
+        padding: 2rem 1rem;
+    }
+
+    .header-main {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .dashboard-header h1 {
+        font-size: 0.8rem;
+        letter-spacing: 0.3em;
+    }
+
+    .welcome-message p {
+        font-size: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .fav-grid {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem;
+    }
+
+    .fav-tile {
+        min-height: 160px;
+    }
+
+    .blob-1 {
+        width: 80vw;
+        height: 80vw;
+    }
+
+    .blob-2 {
+        width: 70vw;
+        height: 70vw;
+    }
+
+    .blob-3 {
+        width: 60vw;
+        height: 60vw;
     }
 }

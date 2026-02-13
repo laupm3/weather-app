@@ -10,7 +10,8 @@
                 </svg>
             </button>
         </div>
-        <p class="date">{{ weatherData.dt * 1000 | date:'EEEE, MMM d':undefined:langService.getCurrentLang() }}</p>
+        <p class="date">{{ weatherData.dt * 1000 | date: langService.get('DATE_FORMAT') : undefined :
+            langService.getCurrentLang() }}</p>
     </div>
 
     <div class="card-body">

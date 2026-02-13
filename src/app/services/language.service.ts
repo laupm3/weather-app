@@ -16,8 +16,8 @@ export class LanguageService {
 
     private translations: Translations = {
         'SEARCH_PLACEHOLDER': {
-            en: 'Search for a city...',
-            es: 'Busca una ciudad...'
+            en: 'Find your city...',
+            es: 'Busca tu ciudad...'
         },
         'SEARCH_BUTTON': {
             en: 'Search',
@@ -68,12 +68,16 @@ export class LanguageService {
             es: 'Visibilidad'
         },
         'APP_TITLE': {
-            en: 'Weather Intelligence',
-            es: 'Inteligencia Climática'
+            en: 'Atmos',
+            es: 'Atmos'
+        },
+        'DATE_FORMAT': {
+            en: 'EEEE, MMM d',
+            es: "EEEE, d 'de' MMM"
         },
         'QUICK_ACCESS': {
-            en: 'Your Locations',
-            es: 'Tus Ubicaciones'
+            en: 'Quick Access',
+            es: 'Acceso Rápido'
         },
         'REMOVE': {
             en: 'Remove',

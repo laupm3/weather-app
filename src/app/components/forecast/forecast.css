@@ -71,5 +71,12 @@
 @media (max-width: 640px) {
     .forecast-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .forecast-grid {
+        grid-template-columns: 1fr;
     }
 }

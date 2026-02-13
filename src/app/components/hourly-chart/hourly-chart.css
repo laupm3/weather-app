@@ -39,3 +39,13 @@
         transform: translateY(0);
     }
 }
+
+@media (max-width: 640px) {
+    .chart-container {
+        padding: 1.25rem 1rem;
+    }
+
+    .canvas-wrapper {
+        height: 180px;
+    }
+}
