@@ -7,14 +7,21 @@
     --bg-thunder: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
     --bg-default: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
 
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    /* Glassmorphism System */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    /* Soft translucent base */
+    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Subtle edge definition */
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    /* Deep depth shadow */
     --glass-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 
+    /* Typography & Colors */
     --text-white: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.6);
     --text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --accent-primary: #38bdf8;
+    --accent-secondary: #818cf8;
 }
 
 .glass {

@@ -6,6 +6,10 @@ import { LanguageService } from '../../services/language.service';
 
 Chart.register(...registerables);
 
+/**
+ * Renders an interactive 24h temperature evolution chart using Chart.js.
+ * Reacts to data, unit, and language changes.
+ */
 @Component({
     selector: 'app-hourly-chart',
     standalone: true,

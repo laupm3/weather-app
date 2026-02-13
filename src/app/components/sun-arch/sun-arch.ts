@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { WeatherData } from '../../models/weather.model';
 import { LanguageService } from '../../services/language.service';
 
+/**
+ * Visualizes the sun's path (Sunrise/Sunset) in a semi-circular arch.
+ * Includes real-time progress tracking.
+ */
 @Component({
     selector: 'app-sun-arch',
     standalone: true,
@@ -29,6 +33,9 @@ export class SunArch implements OnInit, OnChanges {
         }
     }
 
+    /**
+     * Calculates the sun's progress and daylight state.
+     */
     private calculateSunPosition(): void {
         if (!this.weatherData) return;
 

@@ -5,6 +5,10 @@ import { FavoritesService } from '../../services/favorites.service';
 import { LanguageService } from '../../services/language.service';
 import { WeatherIcon } from '../weather-icon/weather-icon';
 
+/**
+ * Displays the current weather summary for a specific city.
+ * Features favorites integration and responsive glassmorphism design.
+ */
 @Component({
   selector: 'app-weather-card',
   standalone: true,

@@ -4,6 +4,10 @@ import { ForecastData } from '../../models/weather.model';
 import { LanguageService } from '../../services/language.service';
 import { WeatherIcon } from '../weather-icon/weather-icon';
 
+/**
+ * Component to display the 5-day weather forecast.
+ * Features staggered reveal animations for superior UX.
+ */
 @Component({
   selector: 'app-forecast',
   standalone: true,

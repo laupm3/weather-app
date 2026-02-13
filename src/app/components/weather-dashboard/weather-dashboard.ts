@@ -12,6 +12,8 @@ import { HourlyChart } from '../hourly-chart/hourly-chart';
 import { SunArch } from '../sun-arch/sun-arch';
 import { WeatherIcon } from '../weather-icon/weather-icon';
 import { WeatherData, ForecastData } from '../../models/weather.model';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { signal, effect, untracked } from '@angular/core';
 
 @Component({
   selector: 'app-weather-dashboard',
@@ -21,12 +23,19 @@ import { WeatherData, ForecastData } from '../../models/weather.model';
   styleUrl: './weather-dashboard.css',
 })
 export class WeatherDashboard implements OnInit, OnDestroy {
+  /** Current weather data for the main card */
   weatherData?: WeatherData;
-  forecastData?: ForecastData; // Main weather data signals
+  /** Forecast data for the charts and grid */
+  forecastData?: ForecastData;
+  /** List of favorite city names */
   favorites: string[] = [];
+  /** Detailed weather data for each favorite city */
   favoriteWeatherData: WeatherData[] = [];
+  /** Global error message state */
   error: string | null = null;
+  /** Loading state flag */
   loading: boolean = false;
+  /** Selected unit system (metric/imperial) */
   units: string = 'metric';
 
   // Parallax offsets
@@ -47,6 +56,14 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {
     this.units = this.detectUnits();
+
+    // Automatically re-fetch weather when language changes
+    effect(() => {
+      const lang = this.langService.getCurrentLang();
+      if (this.lastQuery) {
+        untracked(() => this.searchSubject.next(this.lastQuery!));
+      }
+    });
   }
 
   private detectUnits(): string {
@@ -64,11 +81,18 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     return 'metric';
   }
 
+  /**
+   * Initializes subscriptions for favorites, search, and language changes.
+   */
   ngOnInit(): void {
+    const favorites$ = toObservable(this.favoritesService.favorites);
+
+    // Aggregate favorite cities and their weather data reactively
     this.favSubscription = combineLatest([
-      this.favoritesService.getFavorites(),
+      favorites$,
       this.langService.currentLang$
     ]).pipe(
+      takeUntilDestroyed(),
       switchMap(([favs, lang]) => {
         this.zone.run(() => {
           this.favorites = favs;
@@ -83,9 +107,11 @@ export class WeatherDashboard implements OnInit, OnDestroy {
           return EMPTY;
         }
 
-        const requests = favs.map((city: string) => this.weatherService.getWeather(city, this.units, lang).pipe(
-          catchError(() => EMPTY)
-        ));
+        const requests = favs.map((city: string) =>
+          this.weatherService.getWeather(city, this.units, lang).pipe(
+            catchError(() => EMPTY)
+          )
+        );
         return forkJoin(requests);
       })
     ).subscribe((data: WeatherData[]) => {
@@ -95,6 +121,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
       });
     });
 
+    // Handle search queries and geolocation updates
     this.searchSubscription = this.searchSubject.pipe(
       tap(() => {
         this.zone.run(() => {
@@ -137,17 +164,14 @@ export class WeatherDashboard implements OnInit, OnDestroy {
       });
     });
 
-    // Refrescar al cambiar el idioma
-    this.langService.currentLang$.subscribe(() => {
-      if (this.lastQuery) {
-        this.searchSubject.next(this.lastQuery);
-      }
-    });
-
     this.getUserLocation();
     this.initParallax();
   }
 
+  /**
+   * Initializes the parallax effect for background blobs.
+   * Runs outside Angular's change detection for performance.
+   */
   private initParallax(): void {
     this.zone.runOutsideAngular(() => {
       window.addEventListener('mousemove', (e) => {
@@ -168,6 +192,9 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Triggers the user location detection flow.
+   */
   private getUserLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
