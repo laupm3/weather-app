@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface Translations {
     [key: string]: {
@@ -11,8 +11,8 @@ export interface Translations {
     providedIn: 'root'
 })
 export class LanguageService {
-    private currentLang = new BehaviorSubject<string>(this.detectLanguage());
-    currentLang$ = this.currentLang.asObservable();
+    private currentLang = signal<string>(this.detectLanguage());
+    currentLang$ = toObservable(this.currentLang);
 
     private translations: Translations = {
         'SEARCH_PLACEHOLDER': {
@@ -106,21 +106,21 @@ export class LanguageService {
     }
 
     setLanguage(lang: string) {
-        this.currentLang.next(lang);
+        this.currentLang.set(lang);
         localStorage.setItem('weather-lang', lang);
     }
 
     toggleLang() {
-        const newLang = this.currentLang.value === 'en' ? 'es' : 'en';
+        const newLang = this.currentLang() === 'en' ? 'es' : 'en';
         this.setLanguage(newLang);
     }
 
     get(key: string): string {
-        const lang = this.currentLang.value;
+        const lang = this.currentLang();
         return this.translations[key]?.[lang] || key;
     }
 
     getCurrentLang(): string {
-        return this.currentLang.value;
+        return this.currentLang();
     }
 }

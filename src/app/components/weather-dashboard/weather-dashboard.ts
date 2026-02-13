@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin, Subject, Subscription, EMPTY } from 'rxjs';
+import { forkJoin, Subject, Subscription, EMPTY, combineLatest } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
 import { WeatherService } from '../../services/weather.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -39,15 +39,30 @@ export class WeatherDashboard implements OnInit, OnDestroy {
     private zone: NgZone,
     private cdr: ChangeDetectorRef
   ) {
+    this.units = this.detectUnits();
+  }
+
+  private detectUnits(): string {
     const savedUnits = localStorage.getItem('weather-units');
-    if (savedUnits) {
-      this.units = savedUnits;
+    if (savedUnits) return savedUnits;
+
+    // Smart detection: US, Liberia, Myanmar use Imperial
+    const imperialCountries = ['US', 'LR', 'MM'];
+    const userLocale = navigator.language.split('-')[1] || '';
+
+    if (imperialCountries.includes(userLocale.toUpperCase())) {
+      return 'imperial';
     }
+
+    return 'metric';
   }
 
   ngOnInit(): void {
-    this.favSubscription = this.favoritesService.getFavorites().pipe(
-      switchMap((favs: string[]) => {
+    this.favSubscription = combineLatest([
+      this.favoritesService.getFavorites(),
+      this.langService.currentLang$
+    ]).pipe(
+      switchMap(([favs, lang]) => {
         this.zone.run(() => {
           this.favorites = favs;
           this.cdr.detectChanges();
@@ -61,7 +76,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
           return EMPTY;
         }
 
-        const requests = favs.map(city => this.weatherService.getWeather(city, this.units, this.langService.getCurrentLang()).pipe(
+        const requests = favs.map((city: string) => this.weatherService.getWeather(city, this.units, lang).pipe(
           catchError(() => EMPTY)
         ));
         return forkJoin(requests);
@@ -115,6 +130,13 @@ export class WeatherDashboard implements OnInit, OnDestroy {
       });
     });
 
+    // Refrescar al cambiar el idioma
+    this.langService.currentLang$.subscribe(() => {
+      if (this.lastQuery) {
+        this.searchSubject.next(this.lastQuery);
+      }
+    });
+
     this.getUserLocation();
   }
 
@@ -161,13 +183,6 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
     // También refrescamos el clima de los favoritos
     this.favoritesService.refresh();
-
-    // Refresh current search when language changes
-    this.langService.currentLang$.subscribe(() => {
-      if (this.lastQuery) {
-        this.searchSubject.next(this.lastQuery);
-      }
-    });
   }
 
   getWeatherClass(): string {

@@ -62,7 +62,7 @@ export class HourlyChart implements OnInit, OnChanges, AfterViewInit, OnDestroy 
         const next24h = this.forecastData.list.slice(0, 8);
         const labels = next24h.map(item => {
             const date = new Date(item.dt * 1000);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return date.toLocaleTimeString(this.langService.getCurrentLang(), { hour: '2-digit', minute: '2-digit' });
         });
         const temps = next24h.map(item => item.main.temp);
 
@@ -129,7 +129,7 @@ export class HourlyChart implements OnInit, OnChanges, AfterViewInit, OnDestroy 
         const next24h = this.forecastData.list.slice(0, 8);
         this.chart.data.labels = next24h.map(item => {
             const date = new Date(item.dt * 1000);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return date.toLocaleTimeString(this.langService.getCurrentLang(), { hour: '2-digit', minute: '2-digit' });
         });
         this.chart.data.datasets[0].data = next24h.map(item => item.main.temp);
 
