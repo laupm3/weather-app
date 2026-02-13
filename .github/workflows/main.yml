@@ -23,7 +23,7 @@ jobs:
       run: npm ci
 
     - name: Run tests
-      run: npm test -- --watch=false --reporter=verbose
+      run: npm test -- --watch=false
 
     - name: Build project
       run: npm run build
