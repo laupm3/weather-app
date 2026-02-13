@@ -10,20 +10,20 @@
         <header class="dashboard-header">
             <div class="header-main">
                 <h1>{{ langService.get('APP_TITLE') }}</h1>
-                <div class="unit-toggle" (click)="toggleUnits()"
-                    [title]="'Switch to ' + (units === 'metric' ? 'Fahrenheit' : 'Celsius')">
-                    <span [class.active]="units === 'metric'">°C</span>
-                    <div class="toggle-track">
-                        <div class="toggle-thumb" [class.imperial]="units === 'imperial'"></div>
+                <div class="header-actions">
+                    <div class="unit-toggle" (click)="toggleUnits()"
+                        [title]="'Switch to ' + (units === 'metric' ? 'Fahrenheit' : 'Celsius')">
+                        <div class="toggle-track">
+                            <div class="toggle-thumb" [class.imperial]="units === 'imperial'"></div>
+                        </div>
+                        <span [class.active]="units === 'metric'">°C</span>
+                        <span [class.active]="units === 'imperial'">°F</span>
                     </div>
-                    <span [class.active]="units === 'imperial'">°F</span>
-                </div>
-
-                <div class="lang-switcher"
-                    (click)="langService.setLanguage(langService.getCurrentLang() === 'en' ? 'es' : 'en')">
-                    <span [class.active]="langService.getCurrentLang() === 'en'">EN</span>
-                    <span class="divider">|</span>
-                    <span [class.active]="langService.getCurrentLang() === 'es'">ES</span>
+                    <!-- Language Switcher -->
+                    <div class="lang-switcher" (click)="langService.toggleLang()">
+                        <span [class.active]="langService.getCurrentLang() === 'en'">EN</span>
+                        <span [class.active]="langService.getCurrentLang() === 'es'">ES</span>
+                    </div>
                 </div>
             </div>
             <app-search-bar (citySearch)="handleCitySearch($event)"></app-search-bar>

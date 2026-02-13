@@ -110,6 +110,11 @@ export class LanguageService {
         localStorage.setItem('weather-lang', lang);
     }
 
+    toggleLang() {
+        const newLang = this.currentLang.value === 'en' ? 'es' : 'en';
+        this.setLanguage(newLang);
+    }
+
     get(key: string): string {
         const lang = this.currentLang.value;
         return this.translations[key]?.[lang] || key;
