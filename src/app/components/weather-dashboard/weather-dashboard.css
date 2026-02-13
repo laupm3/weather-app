@@ -242,7 +242,7 @@
 @keyframes slideInBottom {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
 
     to {
@@ -260,78 +260,84 @@
     opacity: 0.4;
 }
 
-.fav-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
+.fav-ribbon {
+    display: flex;
+    gap: 1rem;
     width: 100%;
-    max-width: 900px;
-    margin-top: 2rem;
+    padding: 1rem 0.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.fav-ribbon::-webkit-scrollbar {
+    display: none;
 }
 
 .fav-tile {
+    flex: 0 0 auto;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 2rem;
-    padding: 1.5rem;
+    border-radius: 1.5rem;
+    padding: 0.75rem 1.25rem;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 180px;
+    align-items: center;
+    gap: 1rem;
+    min-width: 160px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .fav-tile:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-10px);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .tile-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    width: 100%;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
 }
 
 .tile-city {
-    flex: 1;
-    min-width: 0;
-    font-size: 1.25rem;
+    font-size: 0.9rem;
     font-weight: 800;
     color: white;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
-    word-break: break-word;
 }
 
 .tile-remove {
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.15);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    opacity: 0.6;
+    opacity: 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .fav-tile:hover .tile-remove {
@@ -340,54 +346,43 @@
 
 .tile-remove:hover {
     background: #ff4d4d;
-    transform: scale(1.1) rotate(90deg);
+    transform: scale(1.1);
 }
 
 .tile-body {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .tile-icon {
-    width: 50px;
-    height: 50px;
-    margin-left: -10px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .tile-temp-group {
     display: flex;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: 0.2rem;
 }
 
 .tile-temp {
-    font-size: 2.25rem;
+    font-size: 1.25rem;
     font-weight: 900;
     color: white;
     line-height: 1;
 }
 
 .tile-units {
-    font-size: 1.2rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.7);
-    margin-left: -2px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .tile-desc {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    line-clamp: 1;
+    display: none;
+    /* Hidden in ribbon to save space */
 }
 
 

@@ -30,23 +30,22 @@
 
             <div *ngIf="favoriteWeatherData.length > 0" class="quick-access">
                 <span class="section-label">{{ langService.get('QUICK_ACCESS') }}</span>
-                <div class="fav-grid">
+                <div class="fav-ribbon">
                     <div *ngFor="let fav of favoriteWeatherData" class="fav-tile" (click)="handleCitySearch(fav.name)">
-                        <div class="tile-header">
-                            <span class="tile-city">{{ fav.name }}</span>
-                            <button class="tile-remove" (click)="removeFavorite(fav.name, $event)"
-                                [title]="langService.get('REMOVE')">
-                                &times;
-                            </button>
-                        </div>
+                        <button class="tile-remove" (click)="removeFavorite(fav.name, $event)"
+                            [title]="langService.get('REMOVE')">
+                            &times;
+                        </button>
                         <div class="tile-body">
                             <img [src]="'https://openweathermap.org/img/wn/' + fav.weather[0].icon + '@2x.png'"
                                 [alt]="fav.weather[0].description" class="tile-icon">
                             <div class="tile-temp-group">
                                 <span class="tile-temp">{{ fav.main.temp | number:'1.0-0' }}°</span>
                                 <span class="tile-units">{{ units === 'metric' ? 'C' : 'F' }}</span>
-                                <span class="tile-desc">{{ fav.weather[0].description }}</span>
                             </div>
+                        </div>
+                        <div class="tile-header">
+                            <span class="tile-city">{{ fav.name }}</span>
                         </div>
                     </div>
                 </div>
