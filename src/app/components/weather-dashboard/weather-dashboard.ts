@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef, effect, untracked, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin, Subject, Subscription, EMPTY, combineLatest } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { SunArch } from '../sun-arch/sun-arch';
 import { WeatherIcon } from '../weather-icon/weather-icon';
 import { WeatherData, ForecastData } from '../../models/weather.model';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { signal, effect, untracked } from '@angular/core';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-weather-dashboard',
@@ -37,6 +37,12 @@ export class WeatherDashboard implements OnInit, OnDestroy {
   loading: boolean = false;
   /** Selected unit system (metric/imperial) */
   units: string = 'metric';
+
+  // Inject DestroyRef for lifecycle-aware streams
+  private destroyRef = inject(DestroyRef);
+
+  // Reactive favorites stream
+  private favorites$ = toObservable(inject(FavoritesService).favorites);
 
   // Parallax offsets
   offsetX: number = 0;
@@ -85,14 +91,12 @@ export class WeatherDashboard implements OnInit, OnDestroy {
    * Initializes subscriptions for favorites, search, and language changes.
    */
   ngOnInit(): void {
-    const favorites$ = toObservable(this.favoritesService.favorites);
-
     // Aggregate favorite cities and their weather data reactively
     this.favSubscription = combineLatest([
-      favorites$,
+      this.favorites$,
       this.langService.currentLang$
     ]).pipe(
-      takeUntilDestroyed(),
+      takeUntilDestroyed(this.destroyRef),
       switchMap(([favs, lang]) => {
         this.zone.run(() => {
           this.favorites = favs;
@@ -123,6 +127,7 @@ export class WeatherDashboard implements OnInit, OnDestroy {
 
     // Handle search queries and geolocation updates
     this.searchSubscription = this.searchSubject.pipe(
+      takeUntilDestroyed(this.destroyRef),
       tap(() => {
         this.zone.run(() => {
           this.loading = true;

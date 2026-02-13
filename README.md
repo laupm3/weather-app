@@ -6,8 +6,10 @@ Atmos es un panel de control meteorológico de alto nivel y nivel senior constru
 ### 📸 Visual Experience | Experiencia Visual
 
 <p align="center">
-  <img src="public/atmos1.png" width="45%" alt="Atmos Main Dashboard" />
-  <img src="public/atmos2.png" width="45%" alt="Charts and Forecast" />
+  <img src="public/atmos1.png" alt="Atmos Main Dashboard" />
+</p>
+<p align="center">
+  <img src="public/atmos2.png" alt="Atmos Main Dashboard" />
 </p>
 
 
